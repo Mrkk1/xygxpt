@@ -27,8 +27,7 @@ def skip_view(page: ft.Page):
 
     def update_top_title(title: str):
         """更新当前页面标题"""
-        shottitle = show_omit_title(title)
-        topTitle.current.value = shottitle
+        topTitle.current.value = title
         page.update()
 
     def choose_course(e=None):
@@ -67,7 +66,6 @@ def skip_view(page: ft.Page):
         return f"{title[:14]}..." if len(title) > 16 else title
 
     course_dict = page.core.get_course()
-    print(course_dict)
     if course_dict.get("code") == 200:
         page.course_list = course_dict.get("data")
         for index, course_item in enumerate(page.course_list):
@@ -128,9 +126,9 @@ def skip_view(page: ft.Page):
         logging.info(f"Value of isOnSkipping: {page.isOnSkipping}")
 
         if len(chooseResults) == 0:
-            show_snack_bar(page, "请先选择您要刷的课程", ft.colors.ERROR)
+            show_snack_bar(page, "你还没有选择课程哟〜", ft.colors.ERROR)
         elif page.isOnSkipping:
-            show_snack_bar(page, "有刷课任务正在进行，请结束后再试", ft.colors.ERROR)
+            show_snack_bar(page, "有刷课任务正在进行，请结束后再试〜", ft.colors.ERROR)
         else:
 
             def close_alert(e):
@@ -156,7 +154,7 @@ def skip_view(page: ft.Page):
                     )
                     page.update()
                     sleep(duration / 1000)
-                    
+
             def wait_indicator_finish():
                 """处理任务完成但进度条没满的情况"""
                 while taskIndicator.current.value < 1:
@@ -218,7 +216,9 @@ def skip_view(page: ft.Page):
             [
                 ft.Stack(
                     [
-                     
+                        ft.ProgressBar(
+                            ref=taskIndicator, value=0, visible=False
+                        ),
                         ft.Container(
                             content=ft.Row(
                                 [
@@ -236,7 +236,7 @@ def skip_view(page: ft.Page):
                                                 on_click=select_all,
                                             ),
                                             ft.ElevatedButton(
-                                                "开始",
+                                                "启动",
                                                 icon=ft.icons.DONE,
                                                 on_click=skip,
                                             ),
@@ -248,9 +248,6 @@ def skip_view(page: ft.Page):
                                 alignment="spaceBetween",
                             ),
                             padding=10,
-                        ),
-                           ft.ProgressBar(
-                            ref=taskIndicator, value=0, visible=False
                         ),
                     ]
                 ),

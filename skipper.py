@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from hackcqooc.core import Core
-import flet as ft
+
 import threading
 import logging
 from time import sleep
@@ -32,8 +32,6 @@ class skipper(threading.Thread):
             result = self.core.skip_section(i)
             if result["code"] == 200:
                 self.success += 1
-                print('成功一个')
-
             else:
                 self.fail += 1
             # 对于任务列表长度为1的情况就没有必要sleep这么久了，只有长度超过1的才要分别sleep 31秒
