@@ -52,4 +52,4 @@
 + **欢迎大家提交Issue**
 + **脚本仅供学习交流，严禁用于商业用途！**
 + **刷课有风险， 请合理使用脚本。**
-+ **由于平台官网原接口的修改，最新版本软件基于[Fuckcqooc](https://github.com/Fatpandac/fuck_cqooc)二次开发完成,引用到了[HUCKCQOOC](https://github.com/Fatpandac/hackcqooc)库，感谢作者[Fatpandac](https://github.com/Fatpandac)的开源支持**
++ **由于平台官网原接口的修改，最新版本软件引用到了[HUCKCQOOC](https://github.com/Fatpandac/hackcqooc)库，感谢作者[Fatpandac](https://github.com/Fatpandac)的开源支持**
