@@ -34,7 +34,7 @@ font_family = {
 
 def main(page: ft.Page):
     logging.info("Init main page")
-
+    
     def on_route_change(e):
         page.views.clear()
         login_view(page)
@@ -55,11 +55,12 @@ def main(page: ft.Page):
     page.fonts = font_family
     page.on_route_change = on_route_change
     page.on_view_pop = view_pop
-    page.window_min_width = 800
-    page.window_width = 800
-    page.window_height = 600
-    page.window_min_height = 600
+    page.window_min_width = 1200
+    page.window_width = 1200
+    page.window_height = 800
+    page.window_min_height = 800
     page.go(page.route)
+    
 
 
 ft.app(target=main, assets_dir="../assets")

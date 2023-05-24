@@ -7,6 +7,7 @@ import webbrowser
 
 
 def login_view(page: ft.page):
+    
     page.theme_mode = "dark"
     account = ft.Ref[ft.TextField]()
     password = ft.Ref[ft.TextField]()
@@ -23,7 +24,7 @@ def login_view(page: ft.page):
     dlg_modal = ft.AlertDialog(
         modal=True,
         title=ft.Text("获取秘钥"),
-        content=ft.Text("本软件完全开源免费，加入交流群264135853，即可获取秘钥。" +
+        content=ft.Text("本软件完全开源免费，加入交流群637932783，即可获取秘钥。" +
                         '\n'+'群号已复制进您的剪贴板，如跳转失败，请手动添加'),
         actions=[
             ft.TextButton("取消", on_click=close_dlg),
@@ -39,10 +40,10 @@ def login_view(page: ft.page):
         page.dialog = dlg_modal
         dlg_modal.open = True
         page.update()
-        pyperclip.copy('264135853')
+        pyperclip.copy('637932783')
         show_snack_bar(
             page,
-            f"加入交流群264135853免费获取秘钥，群号已复制到您的剪贴板",
+            f"加入交流群637932783免费获取秘钥，群号已复制到您的剪贴板",
             ft.colors.GREEN,
             True,
         )
@@ -57,7 +58,7 @@ def login_view(page: ft.page):
         dlg_modalA.open = False
         page.update()
     def gotoguanwang(e):
-        webbrowser.open_new("https://mrkk1.github.io")
+        webbrowser.open_new("https://cqooc.svvs.top/")
         dlg_modalA.open = False
         page.update()
     def gotogithub(e):
@@ -69,10 +70,10 @@ def login_view(page: ft.page):
     dlg_modalA = ft.AlertDialog(
         modal=True,
         title=ft.Text("关于"),
-        content=ft.Text("版本号V3.0.0" +
-                        '\n'+'更新日期：2022-11-26'+'\n'+'官网:https：mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
+        content=ft.Text("版本号V3.1.5" +
+                        '\n'+'更新日期：2023-5-24'+'\n'+'永久官网:https：//mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
         actions=[
-            ft.TextButton("前往官网", on_click=gotoguanwang),
+            ft.TextButton("国内官网", on_click=gotoguanwang),
 
             ft.TextButton("前往github", on_click=gotogithub),
             ft.TextButton("取消", on_click=quxiao),
@@ -96,7 +97,7 @@ def login_view(page: ft.page):
         elif not key.current.value:
             show_snack_bar("请输入秘钥，软件免费可进群获取秘钥")
         else:
-            if key.current.value == 'gxpt2022':
+            if key.current.value == 'gxpt2023':
                 page.core = Core(account.current.value, password.current.value)
                 login_res = page.core.login()
                 if login_res["status"] == "ok":
@@ -107,20 +108,20 @@ def login_view(page: ft.page):
                 show_snack_bar(page, '秘钥错误，请加入群聊获取秘钥', ft.colors.ERROR)
 
     def gotoQQ():
-        pyperclip.copy('264135853')
+        pyperclip.copy('637932783')
         show_snack_bar(
             page,
-            f"加入交流群264135853免费获取秘钥，群号已复制到您的剪贴板",
+            f"加入交流群637932783免费获取秘钥，群号已复制到您的剪贴板",
             ft.colors.GREEN,
             True,
         )
         webbrowser.open_new(
-            "https://qm.qq.com/cgi-bin/qm/qr?k=5r-TsnUKjoZbeKIqOMaxX2kMHxTqGM3W&jump_from=webapi")
+            "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=wvVARNJSRAKjuiffFw0MHrvzKpZL5QhH&authKey=2IZgb%2B%2Fu2%2B7P1EVMxi1UOoGF77%2FxSSyKnmOPSET9%2FQTwNS80ulWE9ee83NcwV1w6&noverify=0&group_code=637932783")
 
     def show_log_path(_e):
         show_snack_bar(
             page,
-            f"软件基于MIT协议开源，感谢hackcqooc的支持",
+            f"软件基于MIT协议开源",
             ft.colors.GREEN,
             True,
         )
@@ -128,7 +129,9 @@ def login_view(page: ft.page):
     def about():
         page.add(ft.Text("Hello!"))
     # View
+
     page.views.append(
+
         ft.View(
             "/",
             [

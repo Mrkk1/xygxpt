@@ -7,8 +7,9 @@ from skipper import skipper as skp
 from time import sleep
 import logging
 
-
 def skip_view(page: ft.Page):
+    page.ifslow = False
+    progressRing = ft.Ref[ft.ProgressRing]()
     # TODO: 添加列表搜索框
     courseList = ft.ListView(
         width=230,
@@ -17,8 +18,9 @@ def skip_view(page: ft.Page):
         expand=True,
     )
     taskIndicator = ft.Ref[ft.ProgressBar]()
-    topTitle = ft.Ref[ft.Text]()
 
+    topTitle = ft.Ref[ft.Text]()
+    
     def disabled_course_list_button(index: int):
         """设置禁用课程按钮"""
         for buttonIndex, textButton in enumerate(courseList.controls.copy()):
@@ -112,6 +114,8 @@ def skip_view(page: ft.Page):
     page.isOnSkipping = False
 
     def skip(e):
+
+  
         chooseResults = list(
             filter(
                 lambda x: x is not None,
@@ -130,7 +134,8 @@ def skip_view(page: ft.Page):
         elif page.isOnSkipping:
             show_snack_bar(page, "有刷课任务正在进行，请结束后再试〜", ft.colors.ERROR)
         else:
-
+            progressRing.current.visible = True
+            page.update()
             def close_alert(e):
                 """关闭对话框，恢复标题文字，并更新任务列表"""
                 page.isOnSkipping = False
@@ -144,13 +149,16 @@ def skip_view(page: ft.Page):
             def start_skip_task():
                 """执行刷课任务"""
                 taskIndicator.current.value = 0
+
+
                 while skipper.getState() is not True:
-                    taskIndicator.current.value = (
-                        taskIndicator.current.value + (1 / 1000)
-                    )
+                    
                     topTitle.current.value = (
                         f"🕓 正在刷课中，当前第{skipper.current}个，"
                         + f"共{len(chooseResults)}个。"
+                    )
+                    taskIndicator.current.value = (
+                    (skipper.current-1) / len(chooseResults)
                     )
                     page.update()
                     sleep(duration / 1000)
@@ -165,7 +173,7 @@ def skip_view(page: ft.Page):
                     sleep(duration / 1000)
 
             taskIndicator.current.visible = True
-            skipper = skp(page.core, chooseResults)
+            skipper = skp(page.core, chooseResults,page.ifslow)
             skipper.start()
             page.isOnSkipping = True
             duration = 31 * len(chooseResults) if len(chooseResults) > 1 else 1
@@ -173,7 +181,10 @@ def skip_view(page: ft.Page):
             start_skip_task()
             wait_indicator_finish()
 
+            progressRing.current.visible = False
             success_dialog = ft.AlertDialog(
+                
+
                 modal=True,
                 title=ft.Text("任务完成"),
                 content=ft.Text(
@@ -185,6 +196,7 @@ def skip_view(page: ft.Page):
                 ],
                 actions_alignment="end",
             )
+
             page.dialog = success_dialog
             success_dialog.open = True
             page.update()
@@ -209,8 +221,20 @@ def skip_view(page: ft.Page):
             page.update()
         else:
             show_snack_bar(page, "该课全部课程都已经刷完了 ^_^", ft.colors.GREEN)
+    def mode_slow(e):
+   
+        
+
+        if(page.ifslow==False):
+            show_snack_bar(page, "稳定模式已开启", ft.colors.GREEN)
+            page.ifslow = True
+        else:
+            show_snack_bar(page, "稳定模式已关闭", ft.colors.ORANGE)
+
+            page.ifslow = False
 
     page.views.append(
+        
         ft.View(
             "/skip",
             [
@@ -229,11 +253,21 @@ def skip_view(page: ft.Page):
                                         font_family="Noto Sans SC",
                                     ),
                                     ft.Row(
-                                        [
+                                        [ 
+                                          
+                                            ft.ProgressRing(    
+                                                ref = progressRing,
+                                                visible= False
+                                            ),
                                             ft.ElevatedButton(
                                                 "全选",
                                                 icon=ft.icons.ALL_INBOX,
                                                 on_click=select_all,
+                                            ),
+                                                ft.ElevatedButton(
+                                                "稳定模式",
+                                                icon=ft.icons.BEACH_ACCESS,
+                                                on_click=mode_slow,
                                             ),
                                             ft.ElevatedButton(
                                                 "启动",
@@ -242,7 +276,7 @@ def skip_view(page: ft.Page):
                                             ),
                                         ],
                                         alignment="center",
-                                        spacing=50,
+                                        spacing=20,
                                     ),
                                 ],
                                 alignment="spaceBetween",
