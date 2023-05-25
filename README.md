@@ -26,7 +26,7 @@
 
 #### 使用方法
 
-+ [前往官网](https://mrkk1.github.io/)下载或者[点击这里(密码:9b2q)](https://ixiaoyu.lanzoub.com/b00wbdjvc)获取最新版本.exe文件
++ [前往官网](https://mrkk1.github.io/)下载或者[点击这里](https://ixiaoyu.lanzoub.com/iA6KG0x8kgzi)获取V3.1.6.exe文件（不一定是最新版本，最新的前往官网）
 + 加入群聊获取秘钥
 + 在软件中输入高校平台的账号密码
 + 登陆后自动获取课程
