@@ -70,8 +70,8 @@ def login_view(page: ft.page):
     dlg_modalA = ft.AlertDialog(
         modal=True,
         title=ft.Text("关于"),
-        content=ft.Text("版本号V3.1.5" +
-                        '\n'+'更新日期：2023-5-24'+'\n'+'永久官网:https：//mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
+        content=ft.Text("版本号V3.1.6" +
+                        '\n'+'更新日期：2023-5-25'+'\n'+'永久官网:https：//mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
         actions=[
             ft.TextButton("国内官网", on_click=gotoguanwang),
 
@@ -100,6 +100,7 @@ def login_view(page: ft.page):
             if key.current.value == 'gxpt2023':
                 page.core = Core(account.current.value, password.current.value)
                 login_res = page.core.login()
+                print(login_res)
                 if login_res["status"] == "ok":
                     page.go("/course")
                 else:

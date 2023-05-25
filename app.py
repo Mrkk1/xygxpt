@@ -49,7 +49,7 @@ def main(page: ft.Page):
 
     page.core = None
     page.log_folder_path = folder_path
-    page.title = "小鱼高校平台助手"
+    page.title = "小鱼高校平台助手V3.1.6"
     page.vertical_alignment = "center"
     page.horizontal_alignment = "center"
     page.fonts = font_family
