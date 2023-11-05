@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from loginView import login_view
 from skipView import skip_view
-
 import flet as ft
 import tempfile
 import os
@@ -33,8 +32,7 @@ font_family = {
 
 
 def main(page: ft.Page):
-    logging.info("Init main page")
-    
+
     def on_route_change(e):
         page.views.clear()
         login_view(page)
@@ -49,18 +47,21 @@ def main(page: ft.Page):
 
     page.core = None
     page.log_folder_path = folder_path
-    page.title = "小鱼高校平台助手V3.1.6"
+    page.title = "小鱼高校平台助手V3.2.0"
     page.vertical_alignment = "center"
     page.horizontal_alignment = "center"
-    page.fonts = font_family
+    page.fonts = {
+        "Noto Sans SC": "/fonts/NotoSansSC-Regular.otf",
+        "JetBrains Mono": "/fonts/JetBrainsMono-Regular.ttf",
+    }
     page.on_route_change = on_route_change
     page.on_view_pop = view_pop
     page.window_min_width = 1200
     page.window_width = 1200
     page.window_height = 800
     page.window_min_height = 800
+
     page.go(page.route)
-    
 
 
 ft.app(target=main, assets_dir="../assets")

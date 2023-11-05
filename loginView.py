@@ -4,6 +4,14 @@ import pyperclip
 import flet as ft
 from hackcqooc.core import Core
 import webbrowser
+import re
+font_family = {
+    "Noto Sans SC": "../assets/fonts/NotoSansSC-Regular.otf",
+    "Noto Sans SC": "../assets/fonts/NotoSansSC-Regular.otf",
+
+}
+
+   
 
 
 def login_view(page: ft.page):
@@ -12,7 +20,29 @@ def login_view(page: ft.page):
     account = ft.Ref[ft.TextField]()
     password = ft.Ref[ft.TextField]()
     key = ft.Ref[ft.TextField]()
+    captcha_value = ft.Ref[ft.TextField]()
+    global captcha_key
+    captcha_key = ""
+    global captchaToken
+    captchaToken=""
+    captcha_url = ""
+    def getToken(e):
+        global captcha_key
+        page.core = Core(account.current.value, password.current.value,captcha=captcha_value.current.value, captcha_key=captcha_key)
+        getToken_res = page.core.get_captchaToken()
+        print(getToken_res)
 
+        if getToken_res["status"] == "ok":
+            page.go("/course")
+        elif getToken_res["msg"]=='账号或密码错误':
+            quxiao2(e)
+        else:   
+            codeurl = getToken_res["cdata"]
+            re_codeurl = re.findall('(?<=base64, ).*$', codeurl)[0]
+            captcha_key = getToken_res["key"]
+            open_dlg_modalB(re_codeurl)
+            show_snack_bar(page,captcha_key, ft.colors.ERROR)
+        show_snack_bar(page, getToken_res["msg"], ft.colors.GREEN)             
     def close_dlg(e):
         dlg_modal.open = False
         page.update()
@@ -57,8 +87,11 @@ def login_view(page: ft.page):
     def quxiao(e):
         dlg_modalA.open = False
         page.update()
+    def quxiao2(e):
+        dlg_modalB.open = False
+        page.update()        
     def gotoguanwang(e):
-        webbrowser.open_new("https://cqooc.svvs.top/")
+        webbrowser.open_new("http://cqooc.nbfnk.fun/")
         dlg_modalA.open = False
         page.update()
     def gotogithub(e):
@@ -70,8 +103,8 @@ def login_view(page: ft.page):
     dlg_modalA = ft.AlertDialog(
         modal=True,
         title=ft.Text("关于"),
-        content=ft.Text("版本号V3.1.6" +
-                        '\n'+'更新日期：2023-5-25'+'\n'+'永久官网:https：//mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
+        content=ft.Text("版本号V3.2.0" +
+                        '\n'+'更新日期：2023-11-6'+'\n'+'国内官网:http://cqooc.nbfnk.fun/'+'\n'+'永久官网:https：//mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
         actions=[
             ft.TextButton("国内官网", on_click=gotoguanwang),
 
@@ -82,14 +115,43 @@ def login_view(page: ft.page):
         actions_alignment="end",
         on_dismiss=lambda e: print("Modal dialog dismissed!"),
     )
+    # 验证码
+    dlg_modalB = ft.AlertDialog(
+        modal=True,
+        # title=ft.Text("请输入验证码"),
+        content=ft.TextField(
+            ref=captcha_value,
+            label="验证码",
+            hint_text="验证码",
+            max_lines=1,
+            width=400,
+        ),
+  
+        actions=[
+            ft.Image(src_base64=""),
+            ft.TextButton("确定", on_click=getToken),
+            ft.TextButton("取消", on_click=quxiao2),
+        ],
+        actions_alignment="end",
+        on_dismiss=lambda e: print("Modal dialog dismissed!"),
+    )
+    
 
     def open_dlg_modalA(e):
         page.dialog = dlg_modalA
         dlg_modalA.open = True
         page.update()
+    def open_dlg_modalB(e):
+        
+        page.dialog = dlg_modalB
+        dlg_modalB.open = True
+        dlg_modalB.actions[0].src_base64 = e
+        page.update()        
 
 
+    
     def login(_e):
+        global captcha_key
         if not account.current.value:
             show_snack_bar(page, "还没有输入帐号噢〜", ft.colors.ERROR)
         elif not password.current.value:
@@ -100,11 +162,41 @@ def login_view(page: ft.page):
             if key.current.value == 'gxpt2023':
                 page.core = Core(account.current.value, password.current.value)
                 login_res = page.core.login()
-                print(login_res)
                 if login_res["status"] == "ok":
                     page.go("/course")
                 else:
-                    show_snack_bar(page, login_res["msg"], ft.colors.ERROR)
+                    if login_res["msg"] == 'InvalidCaptchaToken or missing captcha token':
+                        codeurl = login_res["cdata"] 
+                        captcha_url = re.findall('(?<=base64, ).*$', codeurl)[0]
+                        
+                        captcha_key = login_res["key"] 
+                        
+                        open_dlg_modalB(captcha_url)
+                    show_snack_bar(page, login_res["msg"], ft.colors.ERROR)                    
+            else:
+                show_snack_bar(page, '秘钥错误，请加入群聊获取秘钥', ft.colors.ERROR)
+    def loginagain(_e):
+        if not account.current.value:
+            show_snack_bar(page, "还没有输入帐号噢〜", ft.colors.ERROR)
+        elif not password.current.value:
+            show_snack_bar(page, "好像忘记输入密码了呢", ft.colors.ERROR)
+        elif not key.current.value:
+            show_snack_bar("请输入秘钥，软件免费可进群获取秘钥")
+        else:
+            if key.current.value == 'gxpt2023':
+                page.core = Core(account.current.value, password.current.value)
+                login_res = page.core.login()
+                if login_res["status"] == "ok":
+                    page.go("/course")
+                else:
+                    if login_res["msg"] == 'InvalidCaptchaToken or missing captcha token':
+                        codeurl = login_res["cdata"]
+                        re_codeurl = re.findall('(?<=base64, ).*$', codeurl)[0]
+
+                        captcha_key = login_res["key"]
+                        open_dlg_modalB(re_codeurl)
+                        show_snack_bar(page,captcha_key, ft.colors.ERROR)
+                    show_snack_bar(page, login_res["msg"], ft.colors.ERROR)                    
             else:
                 show_snack_bar(page, '秘钥错误，请加入群聊获取秘钥', ft.colors.ERROR)
 
@@ -142,7 +234,7 @@ def login_view(page: ft.page):
                             content=ft.Text(
                                 "小鱼高校平台助手",
                                 size=50,
-                                font_family="Noto Sans SC",
+                                # font_family="Noto Sans SC",
                             ),
                             on_click=show_log_path,
                             margin=ft.margin.symmetric(vertical=30)
@@ -182,7 +274,7 @@ def login_view(page: ft.page):
                         can_reveal_password=True,
                         max_lines=1,
                         width=200,
-                        icon=ft.icons.KEY
+                        icon=ft.icons.KEY_SHARP
                     ),
                     ft.Container(
                         margin=ft.margin.only(left=40, right=50)
@@ -205,7 +297,8 @@ def login_view(page: ft.page):
                         "登录",
                         icon=ft.icons.LOGIN,
                         on_click=login,
-                        width=180
+                        width=180,
+                        
                     ),
 
                     ft.IconButton(
@@ -213,7 +306,8 @@ def login_view(page: ft.page):
                     ),
                     ft.IconButton(
                         icon=ft.icons.INFO, on_click=open_dlg_modalA
-                    )
+                    ),
+
 
 
 
