@@ -9,7 +9,7 @@ import random
 class skipper(threading.Thread):
     """用于执行跳过课程任务的线程类"""
 
-    def __init__(self, core: Core, sectionList: list,ifslow:False) -> None:
+    def __init__(self, core: Core, sectionList: list,ifslow:False,userSleep:30) -> None:
         """参数说明：
         *core* 功能内核对象，来自src.core
         *sectionList* 包含课程ID的字符串列表
@@ -22,6 +22,8 @@ class skipper(threading.Thread):
         self.current = 1
         self.state = False
         self.ifslow = ifslow
+        self.userSleep = userSleep
+        
 
     def run(self) -> None:
         logging.info("skip thread started")
@@ -31,6 +33,7 @@ class skipper(threading.Thread):
         logging.info("skip task started")
         for i in sectionList:
             result = self.core.skip_section(i)
+            print('------正在请求课程id:'+i)
             if result["code"] == 200:
                 self.success += 1
             else:
@@ -38,9 +41,9 @@ class skipper(threading.Thread):
             # 对于任务列表长度为1的情况就没有必要sleep这么久了，只有长度超过1的才要分别sleep 31秒
             if len(sectionList) != 1:
                 if(self.ifslow==False):
-                    sleep(31)
+                    sleep(31)   
                 else:
-                    sleep_time =  random.randint(100,180)
+                    sleep_time = int(self.userSleep)
                     sleep(sleep_time)
                 
             self.current += 1
