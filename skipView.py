@@ -173,7 +173,7 @@ def skip_view(page: ft.Page):
                     sleep(duration / 1000)
 
             taskIndicator.current.visible = True
-            skipper = skp(page.core, chooseResults,page.ifslow)
+            skipper = skp(page.core, chooseResults,page.ifslow,page.userSleep)
             skipper.start()
             page.isOnSkipping = True
             duration = 31 * len(chooseResults) if len(chooseResults) > 1 else 1
@@ -221,17 +221,25 @@ def skip_view(page: ft.Page):
             page.update()
         else:
             show_snack_bar(page, "该课全部课程都已经刷完了 ^_^", ft.colors.GREEN)
-    def mode_slow(e):
-   
+    
+
+
+    def textbox_changed(e):
+        page.userSleep = e.control.value
+        logging.info(f"用户输入的刷课间隔时间是{page.userSleep}")
+        mode_slow()
+    def mode_slow():
+        
         
 
         if(page.ifslow==False):
-            show_snack_bar(page, "稳定模式已开启", ft.colors.GREEN)
+            show_snack_bar(page, "自定义已开启,间隔"+ page.userSleep +'秒', ft.colors.GREEN)
             page.ifslow = True
         else:
-            show_snack_bar(page, "稳定模式已关闭", ft.colors.ORANGE)
+            show_snack_bar(page, "自定义已修改,间隔"+ page.userSleep +'秒', ft.colors.GREEN)
+           
 
-            page.ifslow = False
+    
 
     page.views.append(
         
@@ -264,11 +272,16 @@ def skip_view(page: ft.Page):
                                                 icon=ft.icons.ALL_INBOX,
                                                 on_click=select_all,
                                             ),
-                                                ft.ElevatedButton(
-                                                "稳定模式",
-                                                icon=ft.icons.BEACH_ACCESS,
-                                                on_click=mode_slow,
-                                            ),
+                                            # 增加一个输入框
+                                            ft.TextField(hint_text="间隔（秒）",
+                                                         
+                                                          width=130,
+                                                         on_change=textbox_changed,),
+                                            # ft.ElevatedButton(
+                                            #     "确定",
+                                            #     icon=ft.icons.DONE,
+                                            #     on_click=mode_slow,
+                                            # ),
                                             ft.ElevatedButton(
                                                 "启动",
                                                 icon=ft.icons.DONE,
