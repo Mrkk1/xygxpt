@@ -103,8 +103,8 @@ def login_view(page: ft.page):
     dlg_modalA = ft.AlertDialog(
         modal=True,
         title=ft.Text("关于"),
-        content=ft.Text("版本号V3.2.1" +
-                        '\n'+'更新日期：2023-11-6'+'\n'+'国内官网:http://cqooc.ywlself.com/'+'\n'+'永久官网:https://mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
+        content=ft.Text("版本号V3.3.1" +
+                        '\n'+'更新日期：2024-05-29'+'\n'+'国内官网:http://cqooc.ywlself.com/'+'\n'+'永久官网:https://mrkk1.github.io'+'\n'+'开源地址：https://github.com/Mrkk1/xygxpt'),
         actions=[
             ft.TextButton("国内官网", on_click=gotoguanwang),
 
